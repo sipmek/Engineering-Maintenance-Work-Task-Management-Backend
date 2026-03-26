@@ -123,12 +123,7 @@ const createActivity = async (req, res, next) => {
   try {
     const { taskId } = req.params;
 
-    const {
-      type,
-      message,
-      amount,
-      status_update
-    } = req.body;
+    const { type, message, amount, status_update } = req.body;
 
     const userId = req.user.id;
 
@@ -136,55 +131,55 @@ const createActivity = async (req, res, next) => {
     const task = await Task.findByPk(taskId);
     if (!task) {
       return res.status(404).json({
-        status: 'fail',
-        message: 'Task tidak ditemukan!',
+        status: "fail",
+        message: "Task tidak ditemukan!",
       });
     }
 
     // 🔐 validasi type
     const allowedTypes = [
-      'comment',
-      'progress',
-      'budget_request',
-      'status_update',
-      'attachment'
+      "comment",
+      "progress",
+      "budget_request",
+      "status_update",
+      "attachment",
     ];
 
     if (!allowedTypes.includes(type)) {
       return res.status(400).json({
-        status: 'fail',
-        message: 'Tipe activity tidak valid!',
+        status: "fail",
+        message: "Tipe activity tidak valid!",
       });
     }
 
     // 🔐 validasi khusus per type
 
     // 💬 comment / progress
-    if ((type === 'comment' || type === 'progress') && !message) {
+    if ((type === "comment" || type === "progress") && !message) {
       return res.status(400).json({
-        status: 'fail',
-        message: 'Message wajib diisi!',
+        status: "fail",
+        message: "Message wajib diisi!",
       });
     }
 
     // 💰 budget
-    if (type === 'budget_request') {
+    if (type === "budget_request") {
       if (!amount || amount <= 0) {
         return res.status(400).json({
-          status: 'fail',
-          message: 'Amount harus diisi dan > 0!',
+          status: "fail",
+          message: "Amount harus diisi dan > 0!",
         });
       }
     }
 
     // 🔄 status update
-    if (type === 'status_update') {
-      const allowedStatus = ['ongoing', 'hold', 'done'];
+    if (type === "status_update") {
+      const allowedStatus = ["ongoing", "hold", "done"];
 
       if (!status_update || !allowedStatus.includes(status_update)) {
         return res.status(400).json({
-          status: 'fail',
-          message: 'Status tidak valid!',
+          status: "fail",
+          message: "Status tidak valid!",
         });
       }
     }
@@ -193,16 +188,14 @@ const createActivity = async (req, res, next) => {
     let file_url = null;
     let file_type = null;
 
-    if (type === 'attachment') {
-      if (!req.body.file_url) {
-        return res.status(400).json({
-          status: 'fail',
-          message: 'File URL wajib!',
-        });
-      }
+    if (req.file) {
+      file_url = `/uploads/${req.file.filename}`;
 
-      file_url = req.body.file_url;
-      file_type = req.body.file_type || 'image';
+      if (req.file.mimetype.startsWith("image")) {
+        file_type = "image";
+      } else {
+        file_type = "document";
+      }
     }
 
     // 🧱 CREATE ACTIVITY
@@ -218,10 +211,10 @@ const createActivity = async (req, res, next) => {
     });
 
     // 🔥 UPDATE TASK JIKA STATUS BERUBAH
-    if (type === 'status_update') {
+    if (type === "status_update") {
       task.status = status_update;
 
-      if (status_update === 'done') {
+      if (status_update === "done") {
         task.completed_at = new Date();
       }
 
@@ -229,19 +222,18 @@ const createActivity = async (req, res, next) => {
     }
 
     res.status(201).json({
-      status: 'success',
+      status: "success",
       data: activity,
-      message: 'Activity berhasil ditambahkan!',
+      message: "Activity berhasil ditambahkan!",
     });
-
   } catch (err) {
     console.error(err);
     next(err);
   }
 };
 
-
 module.exports = {
   createTask,
-  getTaskDetail,createActivity
+  getTaskDetail,
+  createActivity,
 };

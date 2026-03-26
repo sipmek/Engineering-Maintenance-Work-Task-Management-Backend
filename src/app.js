@@ -28,6 +28,7 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
+
 // ✅ Test route
 app.get('/', (req, res) => {
   res.json({ message: 'API berjalan 🚀' });
@@ -36,7 +37,9 @@ app.get('/', (req, res) => {
 const authRoutes = require('./routes/authRoutes');
 const emperorRoutes = require('./routes/emperorRoutes');
 const taskRoutes = require('./routes/taskRoutes');
+const fileRoutes = require('./routes/fileRoutes');
 
+app.use('/files', fileRoutes);
 app.use('/api/tasks', taskRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/emperor', emperorRoutes);
