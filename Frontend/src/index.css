@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #2bda6b; /* The Sims 4 vibrant green */
+  --color-primary-hover: #22b956;
+  --color-secondary: #0ea5e9; /* Soft ocean blue */
+  --color-secondary-hover: #0284c7;
+  
+  /* Adding these to tailwind's utility classes */
+  --color-bg-body: var(--bg-main);
+  --color-bg-surface: var(--bg-surface);
+  --color-text-main: var(--text-main);
+  --color-text-muted: var(--text-muted);
+  --color-border-subtle: var(--border-color);
+}
+
+@layer base {
+  :root {
+    /* Light Theme (Sims 4 Inspired) */
+    --bg-main: #f4f6f8; /* Soft grayish-white background */
+    --bg-surface: #ffffff; /* Clean white for panels and cards */
+    --text-main: #1f2937; /* Dark gray for high legibility */
+    --text-muted: #6b7280; /* Medium gray for secondary text */
+    --border-color: #e5e7eb; /* Soft borders */
+  }
+  
+  .dark {
+    /* Dark Theme (Sleek Slate) */
+    --bg-main: #0f172a; /* Deep slate background */
+    --bg-surface: #1e293b; /* Slightly lighter slate for panels */
+    --text-main: #f8fafc; /* Near white for high legibility */
+    --text-muted: #94a3b8; /* Slate gray for secondary text */
+    --border-color: #334155; /* Subtle dark borders */
+  }
+
+  body {
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    transition-property: background-color, color;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 300ms;
+  }
+}
