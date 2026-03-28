@@ -26,9 +26,15 @@ api.interceptors.response.use(
   },
   (error) => {
     if (error.response && error.response.status === 401) {
-      // Handle unauthorized access (e.g., logout user, redirect to login)
-      console.warn('Unauthorized access - please login again.');
-      // window.location.href = '/login'; 
+      // Clear local storage and redirect to login on token expiry
+      console.warn('Session expired or unauthorized. Redirecting to login...');
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      
+      // Only redirect if not already on the login page to avoid infinite loops
+      if (!window.location.pathname.includes('/login')) {
+        window.location.href = '/login';
+      }
     }
     return Promise.reject(error);
   }

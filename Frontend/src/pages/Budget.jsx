@@ -68,7 +68,8 @@ const Budget = () => {
       const endpoint = isAdminOrEmperor ? '/budgets' : '/budgets/me'; // Fallback if we add 'me' later
       // Assuming for now developers get a subset or just empty if not admin in the global list
       const response = await api.get('/budgets');
-      setBudgets(response.data || []);
+      // Standardized response is { status, message, data: [...] }
+      setBudgets(response.data.data || []);
     } catch (err) {
       setError('Failed to load budget data. ' + (err.response?.data?.message || ''));
     } finally {

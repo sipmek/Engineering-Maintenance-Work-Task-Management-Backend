@@ -26,7 +26,8 @@ const TaskActivity = sequelize.define('TaskActivity', {
       'budget_approved',
       'budget_rejected',
       'status_update',
-      'attachment'
+      'attachment',
+      'system'
     ),
     allowNull: false,
   },

@@ -1,5 +1,6 @@
 const { Task, User, BudgetRequest } = require('../models');
 const { Op } = require('sequelize');
+const sendResponse = require('../utils/response');
 
 exports.getStats = async (req, res) => {
   try {
@@ -37,12 +38,12 @@ exports.getStats = async (req, res) => {
       };
     }
 
-    res.json({
+    return sendResponse(res, 200, 'success', 'Dashboard statistics retrieved successfully', {
       tasks: taskStats,
       ...extraStats
     });
 
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return sendResponse(res, 500, 'error', error.message);
   }
 };

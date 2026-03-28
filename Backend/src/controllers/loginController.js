@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const { User } = require('../models');
 const generateToken = require('../utils/generateToken');
+const sendResponse = require('../utils/response');
 
 const login = async (req, res, next) => {
   try {
@@ -8,52 +9,38 @@ const login = async (req, res, next) => {
 
     // 🧪 VALIDASI
     if (!username || !password) {
-      return res.status(400).json({
-        status: 'fail',
-        message: 'Username dan password wajib diisi!',
-      });
+      return sendResponse(res, 400, 'fail', 'Username dan password wajib diisi!');
     }
 
     // 🔍 CARI USER
     const user = await User.findOne({ where: { username } });
 
     if (!user) {
-      return res.status(401).json({
-        status: 'fail',
-        message: 'Username atau password salah!',
-      });
+      return sendResponse(res, 401, 'fail', 'Username atau password salah!');
     }
 
     // 🔐 CEK PASSWORD
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-      return res.status(401).json({
-        status: 'fail',
-        message: 'Username atau password salah!',
-      });
+      return sendResponse(res, 401, 'fail', 'Username atau password salah!');
     }
 
     // 🚫 CEK STATUS
     if (user.status !== 'active') {
-      return res.status(403).json({
-        status: 'fail',
-        message: 'Akun tidak aktif!',
-      });
+      return sendResponse(res, 403, 'fail', 'Akun tidak aktif!');
     }
 
     // 🎟️ TOKEN
     const token = generateToken(user);
 
-    res.status(200).json({
-      status: 'success',
+    return sendResponse(res, 200, 'success', 'Login berhasil!', {
       token,
-      data: {
+      user: {
         id: user.id,
         username: user.username,
         role: user.role,
-      },
-      message: 'Login berhasil!',
+      }
     });
 
   } catch (err) {

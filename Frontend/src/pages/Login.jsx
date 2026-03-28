@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { LogIn, Key, User, Moon, Sun, AlertCircle } from 'lucide-react';
+import { LogIn, Key, User, Moon, Sun, AlertCircle, Activity, CheckCircle2, Users, PieChart, ShieldCheck } from 'lucide-react';
 import { Input } from '../components/ui/Input';
 import { Button } from '../components/ui/Button';
 import { useTheme } from '../context/ThemeContext';
@@ -57,20 +57,66 @@ const Login = () => {
       <div className="w-full max-w-4xl bg-[var(--color-bg-surface)] rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row z-10 border border-[var(--color-border-subtle)]">
         
         {/* Left Side - Branding */}
-        <div className="md:w-1/2 p-8 md:p-12 flex flex-col justify-center bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-secondary)] text-white relative">
-          {/* Overlay to soften the gradient in dark mode especially */}
-          <div className="absolute inset-0 bg-black/10 mix-blend-overlay"></div>
-          <div className="relative z-10 flex flex-col h-full justify-between">
-            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4 drop-shadow-md">
-              MTMS
-            </h1>
-            <div>
-              <p className="text-xl font-medium mb-2 drop-shadow-sm">Work Management System</p>
-              <p className="text-sm opacity-90 leading-relaxed max-w-xs">
-                Kelola tugas, kolaborasi tim, dan anggaran proyekmu dengan rapi dan efisien.
-              </p>
+        <div className="md:w-1/2 p-8 md:p-12 flex flex-col justify-between bg-gradient-to-br from-[#2bda6b] via-[#0ea5e9] to-[#8b5cf6] text-white relative overflow-hidden">
+          {/* Decorative Blobs */}
+          <div className="absolute -top-24 -left-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+          <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-purple-500/20 rounded-full blur-3xl"></div>
+          
+          <div className="relative z-10">
+            {/* Logo Section */}
+            <div className="flex items-center gap-3 mb-12">
+              <div className="p-2.5 bg-white/20 backdrop-blur-md rounded-xl border border-white/30 shadow-xl">
+                <Activity size={28} className="text-white" strokeWidth={2.5} />
+              </div>
+              <h1 className="text-3xl font-black tracking-tighter uppercase">MTMS</h1>
             </div>
-            {/* Playful abstract shapes here could be added */}
+
+            <div className="space-y-8">
+              <div>
+                <h2 className="text-3xl md:text-4xl font-bold leading-tight mb-4">
+                  Engineering <br />
+                  <span className="text-white/80">Maintenance Hub</span>
+                </h2>
+                <p className="text-lg text-white/90 leading-relaxed max-w-sm">
+                  Elevate your technical operations with a unified work management system.
+                </p>
+              </div>
+
+              {/* Feature Highlights */}
+              <div className="space-y-5">
+                <div className="flex items-center gap-4 group">
+                  <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center border border-white/20 group-hover:bg-white/20 transition-all">
+                    <CheckCircle2 size={20} />
+                  </div>
+                  <span className="font-medium">Streamlined Task Workflow</span>
+                </div>
+                <div className="flex items-center gap-4 group">
+                  <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center border border-white/20 group-hover:bg-white/20 transition-all">
+                    <Users size={20} />
+                  </div>
+                  <span className="font-medium">Real-time Team Collaboration</span>
+                </div>
+                <div className="flex items-center gap-4 group">
+                  <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center border border-white/20 group-hover:bg-white/20 transition-all">
+                    <PieChart size={20} />
+                  </div>
+                  <span className="font-medium">Detailed Budget Analytics</span>
+                </div>
+                <div className="flex items-center gap-4 group">
+                  <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center border border-white/20 group-hover:bg-white/20 transition-all">
+                    <ShieldCheck size={20} />
+                  </div>
+                  <span className="font-medium">Enterprise-grade Security</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="relative z-10 pt-8 mt-auto">
+            <div className="flex items-center gap-2 text-sm text-white/70">
+              <div className="w-8 h-[1px] bg-white/30"></div>
+              <span>Trusted by MTMS Engineering Team</span>
+            </div>
           </div>
         </div>
 

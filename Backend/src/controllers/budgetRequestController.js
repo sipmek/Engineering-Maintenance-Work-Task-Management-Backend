@@ -1,4 +1,5 @@
 const { BudgetRequest, TaskActivity, Task } = require("../models");
+const sendResponse = require("../utils/response");
 
 /**
  * Create a new budget request
@@ -32,7 +33,7 @@ async function createBudgetRequest(req, res) {
       message: `Mengajukan anggaran: ${title} sebesar Rp ${estimated_cost}`,
     });
 
-    res.status(201).json(budget);
+    return sendResponse(res, 201, "success", "Budget request created successfully", budget);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -70,7 +71,7 @@ async function approveBudget(req, res) {
       message: `Anggaran "${budget.title}" disetujui`,
     });
 
-    res.json(budget);
+    return sendResponse(res, 200, "success", `Anggaran "${budget.title}" disetujui`, budget);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -109,7 +110,7 @@ async function rejectBudget(req, res) {
       message: `Anggaran "${budget.title}" ditolak. Alasan: ${reason || 'Tidak ada alasan'}`,
     });
 
-    res.json(budget);
+    return sendResponse(res, 200, "success", `Anggaran "${budget.title}" ditolak`, budget);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -128,7 +129,7 @@ async function getTaskBudgets(req, res) {
         { model: require('../models').User, as: 'approver', attributes: ['username', 'photo'] }
       ]
     });
-    res.json(budgets);
+    return sendResponse(res, 200, "success", "Data budget task berhasil diambil!", budgets);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -172,7 +173,7 @@ async function updateActualCost(req, res) {
       file_type: 'image'
     });
 
-    res.json(budget);
+    return sendResponse(res, 200, "success", "Actual cost updated successfully", budget);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -191,7 +192,7 @@ async function getAllBudgets(req, res) {
       ],
       order: [['createdAt', 'DESC']]
     });
-    res.json(budgets);
+    return sendResponse(res, 200, "success", "All budget data retrieved successfully", budgets);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

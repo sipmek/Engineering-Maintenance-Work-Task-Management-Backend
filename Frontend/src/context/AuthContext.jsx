@@ -33,9 +33,13 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await api.post('/auth/login', { username, password });
       
-      // The backend returns { status, token, data, message }
-      const { token, data: userData } = response.data;
+      // Standardized backend returns { status, message, data: { token, user } }
+      const { token, user: userData } = response.data.data;
       
+      if (!token || !userData) {
+        throw new Error('Invalid authentication response from server.');
+      }
+
       // Save to localStorage
       localStorage.setItem('token', token);
       localStorage.setItem('user', JSON.stringify(userData));

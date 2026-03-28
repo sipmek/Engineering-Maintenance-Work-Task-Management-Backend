@@ -3,6 +3,7 @@ const { User } = require("../models");
 const { Op } = require("sequelize");
 const fs = require('fs');
 const path = require('path');
+const sendResponse = require('../utils/response');
 
 // 👑 CREATE USER (hanya emperor)
 const createUser = async (req, res, next) => {
@@ -70,14 +71,10 @@ const createUser = async (req, res, next) => {
       status: "active",
     });
 
-    res.status(201).json({
-      status: "success",
-      data: {
-        id: newUser.id,
-        username: newUser.username,
-        role: newUser.role,
-      },
-      message: "User berhasil dibuat!",
+    return sendResponse(res, 201, "success", "User berhasil dibuat!", {
+      id: newUser.id,
+      username: newUser.username,
+      role: newUser.role,
     });
   } catch (err) {
     next(err);
@@ -90,10 +87,7 @@ const getAllUsers = async (req, res, next) => {
       attributes: ["id", "username", "email", "role", "status", "photo"],
     });
 
-    res.status(200).json({
-      status: "success",
-      data: users,
-    });
+    return sendResponse(res, 200, "success", "Data user berhasil diambil!", users);
   } catch (err) {
     next(err);
   }
@@ -177,15 +171,11 @@ const updateUser = async (req, res, next) => {
 
     await user.save();
 
-    res.status(200).json({
-      status: "success",
-      data: {
-        id: user.id,
-        username: user.username,
-        role: user.role,
-        status: user.status,
-      },
-      message: "User berhasil diupdate!",
+    return sendResponse(res, 200, "success", "User berhasil diupdate!", {
+      id: user.id,
+      username: user.username,
+      role: user.role,
+      status: user.status,
     });
   } catch (err) {
     next(err);
@@ -224,10 +214,7 @@ const banUser = async (req, res, next) => {
     user.status = 'banned';
     await user.save();
 
-    res.status(200).json({
-      status: 'success',
-      message: 'User berhasil dibanned!',
-    });
+    return sendResponse(res, 200, 'success', 'User berhasil dibanned!');
 
   } catch (err) {
     next(err);
@@ -251,10 +238,7 @@ const activateUser = async (req, res, next) => {
     user.status = 'active';
     await user.save();
 
-    res.status(200).json({
-      status: 'success',
-      message: 'User berhasil diaktifkan kembali!',
-    });
+    return sendResponse(res, 200, 'success', 'User berhasil diaktifkan kembali!');
 
   } catch (err) {
     next(err);
@@ -295,10 +279,7 @@ const resetPassword = async (req, res, next) => {
     user.password = hashedPassword;
     await user.save();
 
-    res.status(200).json({
-      status: 'success',
-      message: 'Password berhasil direset!',
-    });
+    return sendResponse(res, 200, 'success', 'Password berhasil direset!');
 
   } catch (err) {
     next(err);
@@ -332,11 +313,7 @@ const uploadAvatar = async (req, res, next) => {
     user.photo = `uploads/${req.file.filename}`;
     await user.save();
 
-    res.status(200).json({
-      status: 'success',
-      data: { photo: user.photo },
-      message: 'Avatar berhasil diupload!'
-    });
+    return sendResponse(res, 200, 'success', 'Avatar berhasil diupload!', { photo: user.photo });
   } catch (err) {
     console.error('[UPLOAD ERROR]', err);
     if (req.file) {

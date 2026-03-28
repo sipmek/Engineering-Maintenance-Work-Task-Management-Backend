@@ -40,7 +40,8 @@ const DashboardHome = () => {
       try {
         setLoading(true);
         const response = await api.get('/dashboard/stats');
-        setStats(response.data);
+        // Standardized response is { status, message, data: { ...stats } }
+        setStats(response.data.data);
       } catch (err) {
         setError('Failed to load dashboard statistics');
         console.error(err);

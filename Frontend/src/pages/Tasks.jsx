@@ -33,7 +33,8 @@ const Tasks = () => {
       if (myTasksOnly) params.append('mine', 'true');
 
       const response = await api.get(`/tasks?${params.toString()}`);
-      setTasks(response.data.data);
+      // Standardized response is { status, message, data: { tasks: [], ... } }
+      setTasks(response.data.data.tasks || []);
     } catch (error) {
       console.error('Error fetching tasks:', error);
     } finally {

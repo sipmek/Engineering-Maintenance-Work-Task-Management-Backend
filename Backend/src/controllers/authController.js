@@ -54,16 +54,13 @@ const register = async (req, res, next) => {
       status: 'pending', // ❗ menunggu approval
     });
 
-    res.status(201).json({
-      status: 'success',
-      data: {
-        id: newUser.id,
-        username: newUser.username,
-        email: newUser.email,
-        role: newUser.role,
-        status: newUser.status,
-      },
-      message: 'Registrasi berhasil, menunggu persetujuan!',
+    const sendResponse = require('../utils/response');
+    return sendResponse(res, 201, 'success', 'Registrasi berhasil, menunggu persetujuan!', {
+      id: newUser.id,
+      username: newUser.username,
+      email: newUser.email,
+      role: newUser.role,
+      status: newUser.status,
     });
 
   } catch (err) {

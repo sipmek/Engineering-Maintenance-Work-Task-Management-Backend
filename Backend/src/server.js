@@ -20,9 +20,27 @@ connectDB().then(async () => {
       console.log(`[INFO] Dapat diakses di http://localhost:${PORT}`);
     });
 
-    process.on('unhandledRejection', (err, promise) => {
-      console.log(`[FATAL ERROR] Terjadi Unhandled Rejection: ${err.message}`);
-      server.close(() => process.exit(1));
+    // 🛑 Graceful Shutdown
+    const gracefulShutdown = (signal) => {
+      console.log(`\n[SHUTDOWN] Menerima sinyal ${signal}. Menutup server...`);
+      server.close(async () => {
+        console.log('[SHUTDOWN] Server ditutup.');
+        try {
+          await sequelize.close();
+          console.log('[SHUTDOWN] Koneksi database ditutup.');
+        } catch (err) {
+          console.error('[SHUTDOWN ERROR]', err.message);
+        }
+        process.exit(0);
+      });
+    };
+
+    process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+    process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+
+    process.on('unhandledRejection', (err) => {
+      console.log(`[FATAL ERROR] Unhandled Rejection: ${err.message}`);
+      gracefulShutdown('Unhandled Rejection');
     });
 
   } catch (err) {

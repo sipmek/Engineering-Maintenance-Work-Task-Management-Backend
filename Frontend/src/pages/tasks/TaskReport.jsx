@@ -231,47 +231,72 @@ const TaskReport = () => {
             </h3>
             <div className="space-y-6">
               {task.TaskActivities?.length > 0 ? (
-                task.TaskActivities.map((activity, idx) => (
-                  <div key={idx} className="flex gap-4 group break-inside-avoid mb-2">
-                    <div className="flex flex-col items-center">
-                      <div className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center shrink-0 z-10 bg-white">
-                        {activity.User?.photo ? (
-                          <img src={getFullUrl(activity.User.photo)} className="w-full h-full object-cover rounded-full" alt="" />
-                        ) : <User size={12} className="text-gray-400" />}
-                      </div>
-                      {idx !== task.TaskActivities.length - 1 && <div className="w-0.5 flex-1 bg-gray-100 my-1"></div>}
-                    </div>
-                    <div className="flex-1 pb-4">
-                      <div className="flex justify-between items-start mb-1">
-                        <p className="text-xs font-bold text-gray-900">{activity.User?.username}</p>
-                        <p className="text-[10px] text-gray-400">{new Date(activity.createdAt).toLocaleString('id-ID')}</p>
-                      </div>
-                      <p className="text-sm text-gray-600 mb-2">{activity.message || (
-                        activity.type === 'status_update' ? `Status updated to ${activity.status_update}` :
-                          activity.type === 'budget_request' ? `Requested budget of Rp ${parseInt(activity.amount).toLocaleString('id-ID')}` :
-                            'System update'
-                      )}</p>
-                       {activity.file_url && (
-                        <div className="mt-2">
-                          {activity.file_type === 'image' ? (
-                            <div className="relative group/img w-fit overflow-hidden rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-                              <img
-                                src={getFullUrl(activity.file_url)}
-                                alt="Activity attachment"
-                                className="max-w-[200px] max-h-[140px] object-cover block"
-                              />
-                            </div>
-                          ) : (
-                            <div className="flex items-center gap-2 text-[var(--color-primary)] text-xs font-bold bg-blue-50 w-fit px-3 py-1.5 rounded-lg border border-blue-100">
-                              <FileText size={12} />
-                              <span>{activity.file_url.split('/').pop()}</span>
-                            </div>
-                          )}
+                task.TaskActivities.map((activity, idx) => {
+                  const isSystem = activity.type === 'status_update' || activity.type === 'system' ||
+                    (activity.message && (
+                      activity.message.startsWith('Task dibuat oleh') || 
+                      activity.message.startsWith('Task diedit oleh') ||
+                      activity.message.startsWith('Komentar/Aktivitas sebelumnya telah diedit') ||
+                      activity.message.startsWith('System:')
+                    ));
+
+                  if (isSystem) {
+                    return (
+                      <div key={idx} className="flex justify-center items-center my-4 break-inside-avoid">
+                        <div className="bg-gray-50 border border-gray-100 px-4 py-1.5 rounded-full flex items-center gap-2 text-[10px] font-bold text-gray-400 shadow-sm max-w-[90%] text-center">
+                          <AlertCircle size={12} className="text-[var(--color-primary)] opacity-70 shrink-0" />
+                          <span className="truncate uppercase tracking-wider">
+                            {activity.message || `Status changed to: ${activity.status_update}`}
+                          </span>
+                          <span className="opacity-50 shrink-0 ml-1 whitespace-nowrap">
+                            • {new Date(activity.createdAt).toLocaleString('id-ID', {hour: '2-digit', minute:'2-digit', month: 'short', day: 'numeric'})}
+                          </span>
                         </div>
-                      )}
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <div key={idx} className="flex gap-4 group break-inside-avoid mb-2">
+                      <div className="flex flex-col items-center">
+                        <div className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center shrink-0 z-10 bg-white">
+                          {activity.User?.photo ? (
+                            <img src={getFullUrl(activity.User.photo)} className="w-full h-full object-cover rounded-full" alt="" />
+                          ) : <User size={12} className="text-gray-400" />}
+                        </div>
+                        {idx !== task.TaskActivities.length - 1 && <div className="w-0.5 flex-1 bg-gray-100 my-1"></div>}
+                      </div>
+                      <div className="flex-1 pb-4">
+                        <div className="flex justify-between items-start mb-1">
+                          <p className="text-xs font-bold text-gray-900">{activity.User?.username}</p>
+                          <p className="text-[10px] text-gray-400">{new Date(activity.createdAt).toLocaleString('id-ID')}</p>
+                        </div>
+                        <p className="text-sm text-gray-600 mb-2">{activity.message || (
+                          activity.type === 'budget_request' ? `Requested budget of Rp ${parseInt(activity.amount).toLocaleString('id-ID')}` :
+                              'Update'
+                        )}</p>
+                         {activity.file_url && (
+                          <div className="mt-2">
+                            {activity.file_type === 'image' ? (
+                              <div className="relative group/img w-fit overflow-hidden rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+                                <img
+                                  src={getFullUrl(activity.file_url)}
+                                  alt="Activity attachment"
+                                  className="max-w-[200px] max-h-[140px] object-cover block"
+                                />
+                              </div>
+                            ) : (
+                              <div className="flex items-center gap-2 text-[var(--color-primary)] text-xs font-bold bg-blue-50 w-fit px-3 py-1.5 rounded-lg border border-blue-100">
+                                <FileText size={12} />
+                                <span>{activity.file_url.split('/').pop()}</span>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                ))
+                  );
+                })
               ) : (
                 <p className="text-gray-400 text-sm italic">No activity recorded for this task.</p>
               )}

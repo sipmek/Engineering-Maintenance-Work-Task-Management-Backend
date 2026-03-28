@@ -43,6 +43,14 @@ Struktur folder utama di **Backend/src/**:
 - Upload file aman melalui multer.
 - Akses file dilindungi oleh otentikasi.
 
+### 5. API Standardization & Security (Stabilization)
+- **Standardized Response Envelope**: Semua endpoint API mengembalikan format seragam `{ status, message, data }`.
+- **Security Hardening**:
+    - **Rate Limiting**: Pencegahan brute-force dan spam request di level API.
+    - **JWT Configuration**: Eksperasi token yang dapat dikonfigurasi melalui `.env`.
+    - **Global Error Handling**: Penanganan error terpusat untuk menjaga stabilitas server.
+    - **404 Route Handler**: Penanganan endpoint yang tidak terdaftar secara elegan.
+
 ---
 
 ## 📊 Model Database & Relasi
@@ -52,12 +60,13 @@ Struktur folder utama di **Backend/src/**:
 - **Task** hasMany **BudgetRequest**.
 - **BudgetRequest** belongsTo **User** (Requester & Approver).
 
----
 
-## 📝 Catatan Penting untuk Sesi Baru
-Jika Anda memulai sesi baru dengan Antigravity, cukup berikan prompt:
-> *"Bantu saya lanjut di proyek MTMS. Baca file `PROJECT_GUIDE.md` untuk ringkasan fitur dan arsitektur terakhir."*
 
 ## 🚧 Status Terakhir
-- Fitur **Update Actual Cost & Receipt Upload** baru saja diimplementasikan.
+- **API Stabilization Complete**: Seluruh controller (Auth, Task, Dashboard, Emperor, Budget) telah distandarisasi.
+- **Auth Fix**: Isu redirect loop pada frontend telah diperbaiki dengan penyesuaian pemetaan data (data mapping).
+- **UI/UX Enhancement**: Halaman Login telah diperbarui dengan desain branding yang lebih modern, fitur highlight, dan micro-interaction (focus glow) pada input.
 - Server berjalan di port `5000` (`npm run dev`).
+
+## Support & Thankyou
+Terimakasih untuk Gemini dan Chat GPT membantu saya belajar membuat app ini
